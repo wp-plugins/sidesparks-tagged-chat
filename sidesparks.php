@@ -2,16 +2,17 @@
 /*
 Plugin Name: Sidesparks Chat
 Plugin URI: http://www.sidesparks.com
-Description: This plugin will add Sidesparks to your Wordpress Blog's Sidebar
-Author: Noone
+Description: This widget will add Sidesparks to your blog.
+Author: SideSparks.com
 Version: 1.0
 Author URI: http://www.sidesparks.com
 */
-$show_on_main_page = false;
+
+
+$show_on_main_page = true;
 $show_on_category = true;
 $sidesparksInitLink = '<img src = "http://channels.sidesparks.com/discuss.png" style = "border: 0px;">';
 $timeOffset = "2";
-
 
 
 class browser{
