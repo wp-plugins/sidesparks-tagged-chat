@@ -1,8 +1,10 @@
 <?
 /*
-Plugin Name: Sidesparks Chat
+Plugin Name: SideSparks Chat
 Plugin URI: http://www.sidesparks.com
-Description: This widget will add Sidesparks to your blog.
+Description: SideSparks Tagged Chat is the new method of topic-related communication on the net. Do you own a self-hosted WordPress blog? Why not take the next step from static comments to real-time communication? Just imagine: an interesting topic comes up tomorrow that you would like to discuss with some like-minded users. Wouldn't it be exciting to share the thoughts you have about this topic in real-time? Don't you think your audience would like to communicate in this way? Give them that chance.
+
+SideSparks Tagged Chat is a free and easy to install widget that detects the tags of the topic you are writing about. It therefore provides a space where visitors to your Website can discuss a particular product or issue in real-time with visitors from other blogs and Websites. 
 Author: SideSparks.com
 Version: 1.0
 Author URI: http://www.sidesparks.com
