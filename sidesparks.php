@@ -3,18 +3,15 @@
 Plugin Name: SideSparks Chat
 Plugin URI: http://www.sidesparks.com
 Description: SideSparks Tagged Chat is the new method of topic-related communication on the net. Do you own a self-hosted WordPress blog? Why not take the next step from static comments to real-time communication? Just imagine: an interesting topic comes up tomorrow that you would like to discuss with some like-minded users. Wouldn't it be exciting to share the thoughts you have about this topic in real-time? Don't you think your audience would like to communicate in this way? Give them that chance.
-
-SideSparks Tagged Chat is a free and easy to install widget that detects the tags of the topic you are writing about. It therefore provides a space where visitors to your Website can discuss a particular product or issue in real-time with visitors from other blogs and Websites. 
-Author: SideSparks.com
+Author: SideSparks
 Version: 1.0
 Author URI: http://www.sidesparks.com
 */
-
-
 $show_on_main_page = true;
 $show_on_category = true;
 $sidesparksInitLink = '<img src = "http://channels.sidesparks.com/discuss.png" style = "border: 0px;">';
 $timeOffset = "2";
+
 
 
 class browser{
@@ -218,7 +215,7 @@ $maxtagged_root = "http://maxtagged.sidesparks.com";
 /*
 * This will create a hook which will attach a Button to a Blogpost which will open Sidesparks
 */
-add_filter('the_content', 'attachSidesparksButton');
+add_filter('the_content', 'attachSidesparksButton'); // in this version we only use this on the article view, thus $show_on_main_page is false
 function attachSidesparksButton($content)
 {
     $title = the_title('', '', false);
@@ -226,15 +223,74 @@ function attachSidesparksButton($content)
     global $wp_query, $show_on_main_page, $show_on_category, $sidesparksInitLink;
     $page = $wp_query->get_queried_object();
     
+    $tags = get_the_tags();
+    
+    echo "<!--";
+    print_r($tags);
+    echo "-->";
+    $taglist = "";
+    if($tags)
+    {
+        foreach($tags as $key => $val)
+        {
+            $taglist .= " ".$val->name;
+        }
+    }
+    $no_filter = true;
+    if($taglist == "")
+    {
+        $taglist = $title;
+        $no_filter = false;
+    }
+    
     if($page == null && $show_on_main_page)
     {
-        $content .= '<a href = "#" onclick = "initSidesparks(\''.$title.'\'); return false;">'.$sidesparksInitLink.'</a>';
+        $content .= '<a href = "#" onclick = "initSidesparks(\''.$taglist.'\', '.($no_filter == true ? 'true' : 'false').'); return false;">'.$sidesparksInitLink.'</a>';
     }else if($page != null && $show_on_category)
     {
-        $content .= '<a href = "#" onclick = "initSidesparks(\''.$title.'\'); return false;">'.$sidesparksInitLink.'</a>';
+        $content .= '<a href = "#" onclick = "initSidesparks(\''.$taglist.'\', '.($no_filter == true ? 'true' : 'false').'); return false;">'.$sidesparksInitLink.'</a>';
     }
     
     return $content;
+}
+
+/*
+* This will generate a Sidesparks Textlink with the specified link element
+* it will either use get_the_tags() in case it returns an array, else the title
+*/
+function generateSidesparksLink($link, $print = true)
+{
+    $content = "";
+    $title = the_title('', '', false);
+    
+    global $wp_query, $show_on_main_page, $show_on_category, $sidesparksInitLink;
+    $page = $wp_query->get_queried_object();
+    
+    $tags = get_the_tags();
+    $taglist = "";
+    if($tags)
+    {
+        foreach($tags as $key => $val)
+        {
+            $taglist .= " ".$val->name;
+        }
+    }
+    $no_filter = true;
+    if($taglist == "")
+    {
+        $taglist = $title;
+        $no_filter = false;
+    }
+    
+    $content = '<a href = "#" onclick = "initSidesparks(\''.$taglist.'\', '.($no_filter == true ? 'true' : 'false').'); return false;">'.$link.'</a>';
+    
+    if($print)
+    {
+        echo $content;
+    }else
+    {
+        return $content;
+    }
 }
 /*
 * Print out Sidesparks so that it can be opened by a link
@@ -477,7 +533,7 @@ if(sidesparks_header_top)
     document.getElementById('sidesparks_head_top').style.backgroundImage = "url(" + sidesparks_header_top + ")";
 }
   // initialize Sidesparks Window
-  function initSidesparks(tags)
+  function initSidesparks(tags, no_filter)
   {
 <?
 $browserMajorVersion = substr($browser->Version, 0, 1);
@@ -489,6 +545,11 @@ if(($browser->Name == 'MSIE' && $browserMajorVersion == "6") == false) { ?>
        + '&sidesparks_background_left=' + escape(sidesparks_background_left) + '&sidesparks_background_right=' + escape(sidesparks_background_right)
        + '&sidesparks_chatbox_corner_left_bottom=' + escape(sidesparks_chatbox_corner_left_bottom) + '&sidesparks_chatbox_corner_right_bottom=' + escape(sidesparks_chatbox_corner_right_bottom)
        + '&sidesparks_send_button=' + escape(sidesparks_send_button) + '&sidesparks_close_button=' + escape(sidesparks_close_button) + '&sidesparks_maximize_button=' + escape(sidesparks_maximize_button) + '&timeOffset=' + escape(timeOffset);
+       
+       if(no_filter == true)
+       {
+           url = url + '&no_filter=true';
+       }
     
       var sidesparks_iframe = document.getElementById('sidesparks_iframe');
       var sidesparks_window = document.getElementById('sidesparks_window');
