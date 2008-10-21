@@ -17,3 +17,5 @@ in your template. (actually this should generate the "x Comments" link)
 Before that just include: <? echo generateSidesparksLink("Discuss Now", false)." | "; ?>
 
 If you want to edit the button please feel free to modify our button with Photoshop: http://sidesparks.com/sidesparks_psd.zip
+
+For more information please visit www.sidesparks.com
